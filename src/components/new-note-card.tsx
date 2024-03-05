@@ -6,6 +6,8 @@ import { toast } from 'sonner'
 interface newNoteCardProps {
   onNoteCreated: (content: string) => void
 }
+
+let speechRecognition: SpeechRecognition | null = null;
   
 export function NewNoteCard({onNoteCreated}: newNoteCardProps){   
 
@@ -48,9 +50,10 @@ export function NewNoteCard({onNoteCreated}: newNoteCardProps){
     }
     
     setIsRecording(true)
+    setShouldShowOnboarding(false)
 
     const SpeechRecognitionAPI = window.SpeechRecognition || window.webkitSpeechRecognition
-    const speechRecognition = new SpeechRecognition()
+    speechRecognition = new SpeechRecognitionAPI()
 
     speechRecognition.lang = 'pt-BR'
     speechRecognition.continuous = true
@@ -75,6 +78,9 @@ export function NewNoteCard({onNoteCreated}: newNoteCardProps){
 
   function handleStopRecording(){
     setIsRecording(false)
+    if(speechRecognition !== null){
+      speechRecognition.stop()
+    }
   }
 
   return (
@@ -91,7 +97,7 @@ export function NewNoteCard({onNoteCreated}: newNoteCardProps){
       <Dialog.Portal>
           <Dialog.Overlay className='inset-0 fixed bg-black/50' />
           <Dialog.Content 
-            className='fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 max-w-[640px] w-full h-[60vh] bg-slate-700 flex flex-col outline-none'>
+            className='fixed inset-0 md:inset-auto  md:left-1/2 md:top-1/2 md:-translate-x-1/2 md:-translate-y-1/2 md:max-w-[640px] w-full md:h-[60vh] bg-slate-700 md:rounded-md flex flex-col outline-none'>
             <Dialog.Close className='absolute right-0 top-0 bg-slate-800 p-1.5 text-slate-400 hover:text-slate-100'>
               <X className='w-5 h-5'/>
             </Dialog.Close>
@@ -123,9 +129,9 @@ export function NewNoteCard({onNoteCreated}: newNoteCardProps){
 
                 <button 
                   type='button' onClick={handleStopRecording}
-                  className='w-full bg-slate-900 flex items-center gap-2 py-4 text-center text-sm text-slate-300 outline-none font-medium hover:text-slate-100'>
+                  className='w-full bg-slate-900 flex items-center justify-center  gap-2 py-4 text-center text-sm text-slate-300 outline-none font-medium hover:text-slate-100'>
                   <div className='size-3 rounded-full bg-red-500 animate-pulse' />
-                  Gravando! (CLique p/ interromper)
+                  Gravando! (Clique p/ interromper)
                 </button>
 
               ) : (
