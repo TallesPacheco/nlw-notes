@@ -35,8 +35,21 @@ export function App() {
     }
 
     const notesArray = [newNote, ...notes]
-    setNotes(notesArray)
-    localStorage.setItem('notes', JSON.stringify(notesArray))
+    // setNotes(notesArray)
+    // localStorage.setItem('notes', JSON.stringify(notesArray))
+    saveNotesArray(notesArray)
+  }
+
+  function onNoteDeleted(id: string){
+     const notesArray = notes.filter(note => {
+      return note.id !== id
+     })
+     saveNotesArray(notesArray)
+  }
+
+  function saveNotesArray(Notes: any[]){
+      setNotes(Notes)
+      localStorage.setItem('notes', JSON.stringify(Notes))
   }
 
   const filteredNotes =  search !== '' 
@@ -59,7 +72,7 @@ export function App() {
       <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 auto-rows-[250px]'>
         
         <NewNoteCard onNoteCreated={onNoteCreated} />
-        {filteredNotes.map(note => { return <NoteCard key={note.id} note={note} /> })}
+        {filteredNotes.map(note => { return <NoteCard key={note.id} note={note} onNoteDeleted={onNoteDeleted} /> })}
       
       </div>
 
