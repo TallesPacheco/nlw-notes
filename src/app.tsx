@@ -14,6 +14,9 @@ export function App() {
   
   const [search, setSearch] = useState('')
 
+
+
+
   const [notes, setNotes] = useState<Note[]>(() => { 
     const notesOnStorage = localStorage.getItem('notes')
     if(notesOnStorage){
@@ -21,6 +24,10 @@ export function App() {
     }
     return []
   })
+
+
+
+  
 
   function handleSearch(event: ChangeEvent<HTMLInputElement>){
     const query = event.target.value
